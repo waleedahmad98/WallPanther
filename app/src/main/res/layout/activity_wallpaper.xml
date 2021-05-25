@@ -1,0 +1,110 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FF1A2828"
+        android:layout_weight="0.5">
+
+        <ImageView
+            android:id="@+id/wallpaper_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="0dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/card"
+        android:background="@drawable/options_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5"
+        android:layout_marginTop="-10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="20dp">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight = "1" />
+
+            <ImageButton
+                android:id="@+id/download_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:background="@drawable/ic_baseline_save_alt_24">
+            </ImageButton>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight = "1" />
+
+            <ImageButton
+                android:id="@+id/set_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:background="@drawable/ic_baseline_wallpaper_24">
+            </ImageButton>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight = "1" />
+            <ImageButton
+                android:id="@+id/fav_btn"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:background="@drawable/ic_baseline_favorite_border_24">
+            </ImageButton>
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight = "1" />
+
+        </LinearLayout>
+        <View
+            android:id="@+id/view1"
+            android:layout_width="wrap_content"
+            android:layout_height="1dip"
+            android:background="#3E6A6A6A" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp"
+            android:paddingLeft="30dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/name_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="12pt"/>
+            <TextView
+                android:id="@+id/author_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#7B7B7B"
+                android:textSize="10pt"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- Include other widget or layout tags here. These are considered
+            "child views" or "children" of the linear layout -->
+
+</LinearLayout>

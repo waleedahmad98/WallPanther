@@ -1,4 +1,4 @@
-package com.example.walle;
+package com.waleed.walle;
 
 import android.content.Context;
 
