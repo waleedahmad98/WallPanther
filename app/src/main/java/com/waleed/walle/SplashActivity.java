@@ -8,10 +8,8 @@ public class SplashActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Send user to MainActivity as soon as this activity loads
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        // remove this activity from the stack
         finish();
     }
 }

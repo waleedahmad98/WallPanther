@@ -36,7 +36,6 @@ public class MainSelectionFrag extends Fragment {
         int numberOfColumns = 2;
         recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), numberOfColumns));
         adapter = new MyRecyclerViewAdapter(view.getContext(), backgrounds);
-        //  adapter.setClickListener((MyRecyclerViewAdapter.ItemClickListener) this);
         recyclerView.setAdapter(adapter);
         try {
             fetchBackgrounds();

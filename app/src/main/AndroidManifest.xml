@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
@@ -34,6 +35,9 @@
             android:theme="@style/WallpaperActivity">
         </activity>
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2960630260772033~9850150614"/>
 
     </application>
 

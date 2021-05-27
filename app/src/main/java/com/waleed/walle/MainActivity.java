@@ -1,6 +1,7 @@
  package com.waleed.walle;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -12,6 +13,8 @@ import android.provider.SyncStateContract;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,11 +26,21 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnPaidEventListener;
+import com.google.android.gms.ads.ResponseInfo;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.material.tabs.TabLayout;
 
  public class MainActivity extends AppCompatActivity {
-
-
+     private InterstitialAd mInterstitialAd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,12 +72,15 @@ import com.google.android.material.tabs.TabLayout;
         }
         else {
             setContentView(R.layout.activity_main);
+            MobileAds.initialize(this, new OnInitializationCompleteListener() {
+                @Override
+                public void onInitializationComplete(InitializationStatus initializationStatus) {
+                }
+            });
             getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             getSupportActionBar().setCustomView(R.layout.myactionbar);
             getSupportActionBar().setElevation(0);
 
-            //Toolbar toolbar = (Toolbar)findViewById(R.id.tool_bar);
-            //setSupportActionBar(toolbar);
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
             tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FF66BB6A"));
             tabLayout.setTabTextColors(Color.parseColor("#808080"), Color.parseColor("#FF66BB6A"));
