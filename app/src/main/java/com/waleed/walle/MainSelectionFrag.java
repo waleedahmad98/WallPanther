@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
 public class MainSelectionFrag extends Fragment {
@@ -55,21 +56,16 @@ public class MainSelectionFrag extends Fragment {
             @Override
             public void run() {
                 try {
-                    JSONParser jsonParser = new JSONParser();
-                    URLConnection connection = new URL("https://www.reddit.com/r/Amoledbackgrounds.json?limit=100").openConnection(); // must handle this exception with a toast notification
-                    connection.setRequestProperty("Accept-Charset", "UTF-8");
-                    InputStream response = connection.getInputStream();
-                    JSONObject obj = (JSONObject)jsonParser.parse(new InputStreamReader(response, "UTF-8"));
-                    JSONObject data = (JSONObject) obj.get("data");
-                    JSONArray children = (JSONArray) data.get("children");
-                    for (int i = 0; i < children.size(); i++){
-                        if(i > 1){
-                            JSONObject index = (JSONObject) children.get(i);
-                            JSONObject inner_data = (JSONObject) index.get("data");
-                            Entry e = new Entry(inner_data.get("title").toString(), inner_data.get("url").toString(), inner_data.get("thumbnail").toString(), inner_data.get("author").toString());
-                            backgrounds.add(e);
-                        }
+                    WallpaperSource amoledBackgrounds = new AmoledBackgrounds();
+                    WallpaperSource verticalWallpapers = new Verticalwallpapers();
+                    for (Entry e : amoledBackgrounds.getTop100()){
+                        backgrounds.add(e);
                     }
+                    for (Entry e : verticalWallpapers.getTop100()){
+                        backgrounds.add(e);
+
+                    }
+                    Collections.shuffle(backgrounds);
                     latch.countDown();
                 }
                 catch (Exception ex) {
