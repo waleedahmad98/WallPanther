@@ -49,7 +49,6 @@ public class MainSelectionFrag extends Fragment {
     }
 
 
-
     public void fetchBackgrounds() throws InterruptedException {
         final CountDownLatch latch = new CountDownLatch(1);
         new Thread(new Runnable(){
@@ -65,7 +64,7 @@ public class MainSelectionFrag extends Fragment {
                         backgrounds.add(e);
 
                     }
-                    Collections.shuffle(backgrounds);
+                    Collections.sort(backgrounds, new EntryComparator());
                     latch.countDown();
                 }
                 catch (Exception ex) {

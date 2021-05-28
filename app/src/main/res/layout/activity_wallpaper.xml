@@ -9,6 +9,18 @@
         android:background="#FF1A2828"
         android:layout_weight="0.5">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/>
+
         <ImageView
             android:id="@+id/wallpaper_preview"
             android:layout_width="match_parent"

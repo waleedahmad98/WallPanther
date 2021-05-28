@@ -28,7 +28,7 @@ public class AmoledBackgrounds implements WallpaperSource{
                 JSONObject index = (JSONObject) children.get(i);
                 JSONObject inner_data = (JSONObject) index.get("data");
                 if (inner_data.containsKey("post_hint")) {
-                    Entry e = new Entry(inner_data.get("title").toString(), inner_data.get("url").toString(), inner_data.get("thumbnail").toString(), inner_data.get("author").toString());
+                    Entry e = new Entry(inner_data.get("title").toString(), inner_data.get("url").toString(), inner_data.get("thumbnail").toString(), inner_data.get("author").toString(), inner_data.get("created").toString());
                     backgrounds.add(e);
                 }
             }

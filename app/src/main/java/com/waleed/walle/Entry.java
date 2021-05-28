@@ -8,12 +8,14 @@ public class Entry implements Parcelable {
     private String link;
     private String thumbnail;
     private String author;
+    private String date_created;
 
-    public Entry(String title, String link, String thumbnail, String author){
+    public Entry(String title, String link, String thumbnail, String author, String date_created){
         setLink(link);
         setTitle(title);
         setThumbnail(thumbnail);
         setAuthor(author);
+        setDate_created(date_created);
     }
 
     protected Entry(Parcel in) {
@@ -21,6 +23,7 @@ public class Entry implements Parcelable {
         link = in.readString();
         thumbnail = in.readString();
         author = in.readString();
+        date_created = in.readString();
     }
 
     public static final Creator<Entry> CREATOR = new Creator<Entry>() {
@@ -78,5 +81,14 @@ public class Entry implements Parcelable {
         dest.writeString(link);
         dest.writeString(thumbnail);
         dest.writeString(author);
+        dest.writeString(date_created);
+    }
+
+    public String getDate_created() {
+        return date_created;
+    }
+
+    public void setDate_created(String date_created) {
+        this.date_created = date_created;
     }
 }

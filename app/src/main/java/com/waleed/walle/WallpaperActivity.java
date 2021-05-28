@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -43,6 +45,7 @@ public class WallpaperActivity extends AppCompatActivity {
     boolean favourited = false;
     private InterstitialAd mInterstitialAd;
     private Entry received;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,9 +60,25 @@ public class WallpaperActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayShowHomeEnabled(false);
+
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         View view = (ImageView) findViewById(R.id.wallpaper_preview);
         received = (Entry) getIntent().getParcelableExtra("Details");
-        Picasso.with(this).load(received.getLink()).resize(1080,1920).centerCrop().into((ImageView) view);
+        Picasso.with(this).load(received.getLink()).resize(1080,1920).centerCrop().into((ImageView) view,  new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
         ArrayList<Entry> favouriteBackgrounds = db.getAllWallpapers();
         if (isIn(favouriteBackgrounds, received)){
             favourited = true;
@@ -193,7 +212,6 @@ public class WallpaperActivity extends AppCompatActivity {
     }
 
     private static void downloadWallpaper(Context context, String title, String url) {
-        final ProgressDialog progress = new ProgressDialog(context);
         class Save extends AsyncTask<Void, Void, Void> {
             @Override
             protected void onPreExecute() {
@@ -234,9 +252,6 @@ public class WallpaperActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
-                if (progress.isShowing()) {
-                    progress.dismiss();
-                }
                 Toast.makeText(context, "Wallpaper Downloaded Successfully!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -325,7 +340,6 @@ public class WallpaperActivity extends AppCompatActivity {
                 mInterstitialAd = null;
             }
         });
-
 
     }
 
