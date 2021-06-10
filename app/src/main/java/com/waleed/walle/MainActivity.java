@@ -83,7 +83,7 @@ import com.google.android.material.tabs.TabLayout;
 
             TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
             tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FF66BB6A"));
-            tabLayout.setTabTextColors(Color.parseColor("#808080"), Color.parseColor("#FF66BB6A"));
+            tabLayout.setTabTextColors(Color.parseColor("#FFFFFF"), Color.parseColor("#FF66BB6A"));
             tabLayout.addTab(tabLayout.newTab().setText("Home"));
             tabLayout.addTab(tabLayout.newTab().setText("Favourites"));
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);

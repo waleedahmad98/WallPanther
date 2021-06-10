@@ -97,20 +97,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="30dp"
-            android:paddingLeft="30dp"
+            android:paddingLeft="20dp"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/name_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textSize="12pt"/>
+                android:fontFamily="@font/nexa_bold"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"/>
             <TextView
                 android:id="@+id/author_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#7B7B7B"
-                android:textSize="10pt"/>
+                android:fontFamily="@font/nexa_light"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
 
         </LinearLayout>
     </LinearLayout>

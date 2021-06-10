@@ -42,7 +42,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.myTextView1.setText(mData.get(position).getTitle());
         holder.myTextView2.setText(mData.get(position).getAuthor());
-        Picasso.with(context).load(mData.get(position).getThumbnail()).resize(250, 250).into(holder.imgView);
+        Picasso.with(context).load(mData.get(position).getThumbnail()).into(holder.imgView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

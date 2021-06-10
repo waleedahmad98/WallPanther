@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 
@@ -37,8 +38,7 @@ public class FavSelectionFrag extends Fragment {
 
         backgrounds = db.getAllWallpapers();
         RecyclerView recyclerView = view.findViewById(R.id.rvNumbers);
-        int numberOfColumns = 2;
-        recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), numberOfColumns));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));//new GridLayoutManager(view.getContext(), numberOfColumns));
         adapter = new MyRecyclerViewAdapter(view.getContext(), backgrounds);
         recyclerView.setAdapter(adapter);
 

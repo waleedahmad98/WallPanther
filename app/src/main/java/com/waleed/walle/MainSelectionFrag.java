@@ -1,15 +1,18 @@
 package com.waleed.walle;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,23 +29,25 @@ import java.util.concurrent.CountDownLatch;
 public class MainSelectionFrag extends Fragment {
     MyRecyclerViewAdapter adapter;
     private ArrayList<Entry> backgrounds;
-
+    ProgressBar progressBar;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_selection, container, false);
 
+        progressBar = view.findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         backgrounds = new ArrayList<Entry>();
         RecyclerView recyclerView = view.findViewById(R.id.rvNumbers);
-        int numberOfColumns = 2;
-        recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), numberOfColumns));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));//new GridLayoutManager(view.getContext(), numberOfColumns));
         adapter = new MyRecyclerViewAdapter(view.getContext(), backgrounds);
-        recyclerView.setAdapter(adapter);
         try {
             fetchBackgrounds();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        recyclerView.setAdapter(adapter);
 
         return view;
 
@@ -50,7 +55,6 @@ public class MainSelectionFrag extends Fragment {
 
 
     public void fetchBackgrounds() throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
         new Thread(new Runnable(){
             @Override
             public void run() {
@@ -65,14 +69,20 @@ public class MainSelectionFrag extends Fragment {
 
                     }
                     Collections.sort(backgrounds, new EntryComparator());
-                    latch.countDown();
                 }
                 catch (Exception ex) {
                     ex.printStackTrace();
                 }
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.updateData(backgrounds);
+                        progressBar.setVisibility(View.GONE);
+
+                    }
+                });
             }
         }).start();
-        latch.await();
-        adapter.updateData(backgrounds);
+
     }
 }
