@@ -1,5 +1,8 @@
 package com.waleed.walle;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.WallpaperManager;
 import android.content.Context;
@@ -22,6 +25,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
@@ -39,6 +44,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class WallpaperActivity extends AppCompatActivity {
     Database db = new Database(this);
@@ -211,11 +217,40 @@ public class WallpaperActivity extends AppCompatActivity {
         set.execute();
     }
 
-    private static void downloadWallpaper(Context context, String title, String url) {
-        class Save extends AsyncTask<Void, Void, Void> {
+    private void downloadWallpaper(Context context, String title, String url) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("wallEWallpaper", "Wallpaper Download", importance);
+            channel.setDescription("Notification for Wallpaper Download");
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "wallEWallpaper");
+        builder.setContentTitle("Fresh Wallpapers on the way..")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setPriority(NotificationCompat.PRIORITY_LOW);
+
+        class Save extends AsyncTask<Void, Integer, Void> {
+            String savedPath;
+            Random random = new Random();
+            int m = random.nextInt(9999 - 1000) + 1000;
+
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                builder.setProgress(100, 0, false);
+                notificationManager.notify(m, builder.build());
+            }
+
+            @Override
+            protected void onProgressUpdate(Integer... values) {
+                builder.setProgress(100, values[0], false);
+                notificationManager.notify(m, builder.build());
+                super.onProgressUpdate(values);
             }
 
             @Override
@@ -223,18 +258,26 @@ public class WallpaperActivity extends AppCompatActivity {
                 try {
 
                     File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "WallE");//context.getExternalFilesDir(null).getAbsolutePath()+"/wallE/Wallpapers");
-                    String fileName = title + ".jpg";
-                    dir.mkdirs();
+
+                    String extension = url.substring(url.length()-4, url.length());
+                    String fileName = title + extension;
+                    if (title.contains("?")){
+                        fileName = String.valueOf(m) + extension;
+                    }
+
                     final File ImageFile = new File(dir + File.separator + fileName); // Create image file
+                    savedPath = dir + File.separator + fileName;
                     FileOutputStream fos = null;
                     try {
+                        publishProgress(50);
                         fos = new FileOutputStream(ImageFile);
                         Bitmap bitmap = Picasso.with(context).load(url).get();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        if (extension.contains("png"))
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+                        else
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                        publishProgress(100);
 
-                        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                        intent.setData(Uri.fromFile(ImageFile));
-                        context.sendBroadcast(intent);
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
@@ -252,6 +295,15 @@ public class WallpaperActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(Void result) {
                 super.onPostExecute(result);
+                //builder.setContentText("Download complete");
+                // Removes the progress bar
+                //builder.setProgress(0, 0, false);
+                //notificationManager.notify(1, builder.build());
+
+                notificationManager.cancel(m);
+                Intent intent = new Intent(getBaseContext(), BroadcastNotification.class);
+                intent.putExtra("path", savedPath);
+                sendBroadcast(intent);
                 Toast.makeText(context, "Wallpaper Downloaded Successfully!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -309,7 +361,6 @@ public class WallpaperActivity extends AppCompatActivity {
 
     public void createAd() {
         AdRequest adRequest = new AdRequest.Builder().build();
-
         InterstitialAd.load(this,"ca-app-pub-2960630260772033/1234962299", adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {

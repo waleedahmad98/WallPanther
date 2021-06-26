@@ -34,7 +34,7 @@
         <activity android:name="com.waleed.walle.FullWallpaperActivity"
             android:theme="@style/WallpaperActivity">
         </activity>
-
+        <receiver android:name = ".BroadcastNotification" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-2960630260772033~9850150614"/>
