@@ -1,6 +1,7 @@
  package com.waleed.walle;
 
 import android.Manifest;
+import android.animation.LayoutTransition;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +12,10 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.provider.SyncStateContract;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,6 +24,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -129,6 +135,7 @@ import com.google.android.material.tabs.TabLayout;
              switch (position){
                  case 0:
                      MainSelectionFrag home = new MainSelectionFrag();
+                     home.setHasOptionsMenu(true);
                      return home;
                  case 1:
                      FavSelectionFrag fav = new FavSelectionFrag();
@@ -149,7 +156,18 @@ import com.google.android.material.tabs.TabLayout;
          }
          return true;
      }
-}
+
+//     @Override
+//     public boolean onCreateOptionsMenu(Menu menu) {
+//         MenuInflater inflater = getMenuInflater();
+//         inflater.inflate(R.menu.search_bar, menu);
+//         MenuItem searchItem = menu.findItem(R.id.search);
+//         SearchView searchView = (SearchView) searchItem.getActionView();
+//         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+//         return true;
+//     }
+
+ }
 
 
 

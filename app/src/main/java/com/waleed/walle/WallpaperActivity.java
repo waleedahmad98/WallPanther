@@ -8,11 +8,14 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -39,6 +42,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -72,7 +76,7 @@ public class WallpaperActivity extends AppCompatActivity {
 
         View view = (ImageView) findViewById(R.id.wallpaper_preview);
         received = (Entry) getIntent().getParcelableExtra("Details");
-        Picasso.with(this).load(received.getLink()).resize(1080,1920).centerCrop().into((ImageView) view,  new com.squareup.picasso.Callback() {
+        Picasso.with(this).load(received.getLink()).resize(1080, 1920).centerCrop().into((ImageView) view, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
                 if (progressBar != null) {
@@ -86,19 +90,19 @@ public class WallpaperActivity extends AppCompatActivity {
             }
         });
         ArrayList<Entry> favouriteBackgrounds = db.getAllWallpapers();
-        if (isIn(favouriteBackgrounds, received)){
+        if (isIn(favouriteBackgrounds, received)) {
             favourited = true;
         }
-        TextView name = (TextView)findViewById(R.id.name_details);
-        TextView author = (TextView)findViewById(R.id.author_details);
+        TextView name = (TextView) findViewById(R.id.name_details);
+        TextView author = (TextView) findViewById(R.id.author_details);
         name.setText(received.getTitle());
         author.setText(received.getAuthor());
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mInterstitialAd!=null){
+                if (mInterstitialAd != null) {
                     mInterstitialAd.show(WallpaperActivity.this);
-                }else {
+                } else {
 
                     Intent intent = new Intent(getBaseContext(), FullWallpaperActivity.class);
                     intent.putExtra("Details", received);
@@ -110,7 +114,9 @@ public class WallpaperActivity extends AppCompatActivity {
         ImageButton downloadButton = (ImageButton) findViewById(R.id.download_btn);
         ImageButton setButton = (ImageButton) findViewById(R.id.set_btn);
         ImageButton favButton = (ImageButton) findViewById(R.id.fav_btn);
-        if (favourited == true){
+        ImageButton shareButton = (ImageButton) findViewById(R.id.shr_btn);
+
+        if (favourited == true) {
             favButton.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
         }
 
@@ -137,13 +143,12 @@ public class WallpaperActivity extends AppCompatActivity {
         favButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (favourited == true){
+                if (favourited == true) {
                     db.deleteWallpaper(received.getLink());
                     favButton.setBackgroundResource(R.drawable.ic_baseline_favorite_border_24);
                     favourited = false;
                     Toast.makeText(getBaseContext(), "Wallpaper removed from Favourites!", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     db.insertWallpaper(received);
                     favButton.setBackgroundResource(R.drawable.ic_baseline_favorite_24);
                     favourited = true;
@@ -151,7 +156,19 @@ public class WallpaperActivity extends AppCompatActivity {
                 }
             }
         });
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, received.getLink());
+                startActivity(Intent.createChooser(shareIntent, "Share Link using"));
+            }
+
+        });
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {
