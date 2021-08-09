@@ -4,14 +4,7 @@
 
     <!-- Logo at the center of the screen -->
     <item
-        android:drawable="@drawable/ic_wall_e_logo"
-        android:height="100dp"
-        android:width="100dp"
+        android:drawable="@drawable/logo_large_foreground"
         android:gravity="center"/>
-
-    <item
-        android:drawable="@drawable/ic_wall_e_text"
-        android:gravity="bottom|center"
-        android:bottom="75dp"/>
 
   </layer-list>

@@ -23,7 +23,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="16dp"
-            android:background="#66BB6A">
+            android:background="#B10085">
 
             <!-- Title, secondary and supporting text -->
             <TextView

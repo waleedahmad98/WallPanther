@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF1A2828">
+    android:fitsSystemWindows="false"
+    >
 
    <com.google.android.material.tabs.TabLayout
             android:id="@+id/tab_layout"
@@ -10,7 +11,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:elevation="2dp"
-            
+
        />
 
 
