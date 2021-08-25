@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -41,7 +42,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.myTextView1.setText(mData.get(position).getTitle());
         holder.myTextView2.setText(mData.get(position).getAuthor());
-        Picasso.with(context).load(mData.get(position).getThumbnail()).into(holder.imgView);
+        ProgressBar progressBar = holder.pbar;
+        progressBar.setVisibility(View.VISIBLE);
+
+        Picasso.with(context).load(mData.get(position).getLink()).into((ImageView) holder.imgView, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                if (progressBar != null) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,11 +78,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         TextView myTextView1;
         TextView myTextView2;
         ImageView imgView;
+        ProgressBar pbar;
         ViewHolder(View itemView) {
             super(itemView);
             myTextView1 = itemView.findViewById(R.id.img_info);
             myTextView2 = itemView.findViewById(R.id.author_info);
             imgView = itemView.findViewById(R.id.img_android);
+            pbar = itemView.findViewById(R.id.progressBar);
             itemView.setOnClickListener(this);
         }
 

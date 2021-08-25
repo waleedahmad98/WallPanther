@@ -8,20 +8,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     MyRecyclerViewAdapter adapter;
     private ArrayList<Entry> backgrounds;
-    ProgressBar progressBar;
     String word = "";
-
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_search);
+        mSwipeRefreshLayout = findViewById(R.id.swipe);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
         word = getIntent().getExtras().getString("query");
 
@@ -29,18 +32,26 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Showing results for '" + word + "'");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
 
         backgrounds = new ArrayList<Entry>();
         RecyclerView recyclerView = findViewById(R.id.rvNumbers);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));//new GridLayoutManager(view.getContext(), numberOfColumns));
         adapter = new MyRecyclerViewAdapter(this, backgrounds);
-        try {
-            fetchBackgrounds();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        mSwipeRefreshLayout.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                mSwipeRefreshLayout.setRefreshing(true);
+
+                // Fetching data from server
+                try {
+                    fetchBackgrounds();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         recyclerView.setAdapter(adapter);
 
     }
@@ -68,7 +79,7 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         adapter.updateData(backgrounds);
-                        progressBar.setVisibility(View.GONE);
+                        mSwipeRefreshLayout.setRefreshing(false);
 
                     }
                 });
@@ -87,6 +98,16 @@ public class SearchActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        backgrounds.clear();
+        try {
+            fetchBackgrounds();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
 

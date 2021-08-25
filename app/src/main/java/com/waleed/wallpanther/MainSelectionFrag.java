@@ -9,6 +9,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,31 +19,43 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MainSelectionFrag extends Fragment {
+public class MainSelectionFrag extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     MyRecyclerViewAdapter adapter;
     private ArrayList<Entry> backgrounds;
-    ProgressBar progressBar;
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main_selection, container, false);
+        mSwipeRefreshLayout = view.findViewById(R.id.swipe);
 
-        progressBar = view.findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
 
         backgrounds = new ArrayList<Entry>();
         RecyclerView recyclerView = view.findViewById(R.id.rvNumbers);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));//new GridLayoutManager(view.getContext(), numberOfColumns));
         adapter = new MyRecyclerViewAdapter(view.getContext(), backgrounds);
-        try {
-            fetchBackgrounds();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        mSwipeRefreshLayout.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                mSwipeRefreshLayout.setRefreshing(true);
+
+                // Fetching data from server
+                try {
+                    fetchBackgrounds();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         recyclerView.setAdapter(adapter);
 
         return view;
@@ -52,6 +65,7 @@ public class MainSelectionFrag extends Fragment {
 
     public void fetchBackgrounds() throws InterruptedException {
         new Thread(new Runnable(){
+
             @Override
             public void run() {
                 try {
@@ -73,7 +87,7 @@ public class MainSelectionFrag extends Fragment {
                     @Override
                     public void run() {
                         adapter.updateData(backgrounds);
-                        progressBar.setVisibility(View.GONE);
+                        mSwipeRefreshLayout.setRefreshing(false);
 
                     }
                 });
@@ -105,5 +119,15 @@ public class MainSelectionFrag extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onRefresh() {
+        backgrounds.clear();
+        try {
+            fetchBackgrounds();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
