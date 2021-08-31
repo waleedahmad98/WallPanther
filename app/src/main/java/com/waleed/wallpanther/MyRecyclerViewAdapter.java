@@ -45,7 +45,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         ProgressBar progressBar = holder.pbar;
         progressBar.setVisibility(View.VISIBLE);
 
-        Picasso.with(context).load(mData.get(position).getLink()).into((ImageView) holder.imgView, new com.squareup.picasso.Callback() {
+        Picasso.with(context).load(mData.get(position).getLink()).fit().centerCrop().into((ImageView) holder.imgView, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
                 if (progressBar != null) {
